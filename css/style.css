@@ -22,6 +22,7 @@
 }
 
 /* Mother-child color coding */
+/* Jacob's wives */
 .mother-leah {
     border: 3px solid #4A90E2 !important; /* Blue for Leah */
 }
@@ -36,6 +37,27 @@
 
 .mother-zilpah {
     border: 3px solid #904AE2 !important; /* Purple for Zilpah */
+}
+
+/* David's wives */
+.mother-ahinoam {
+    border: 3px solid #FF8C42 !important; /* Orange for Ahinoam */
+}
+
+.mother-abigail {
+    border: 3px solid #20B2AA !important; /* Teal for Abigail */
+}
+
+.mother-maacah {
+    border: 3px solid #DC143C !important; /* Red for Maacah */
+}
+
+.mother-haggith {
+    border: 3px solid #8B4513 !important; /* Brown for Haggith */
+}
+
+.mother-bathsheba {
+    border: 3px solid #FFD700 !important; /* Gold for Bathsheba */
 }
 
 /* Connection lines */

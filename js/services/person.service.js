@@ -338,7 +338,8 @@ const p2339 = {
 const p2340 = {
     id: 'p2340',
     name: 'Judah',
-    childrenIds: [],
+    spouseIds: ['p2349'],
+    childrenIds: ['p2456'],
     parentIds: ['p2234', 'p2235']
 }
 
@@ -396,6 +397,201 @@ const p2348 = {
     name: 'Benjamin',
     childrenIds: [],
     parentIds: ['p2234', 'p2236']
+}
+
+const p2349 = {
+    id: 'p2349',
+    name: 'Tamar',
+    spouseIds: ['p2340'],
+    childrenIds: ['p2456'],
+    parentIds: []
+}
+
+const p2456 = {
+    id: 'p2456',
+    name: 'Perez',
+    childrenIds: ['p2557'],
+    parentIds: ['p2340', 'p2349']
+}
+
+const p2557 = {
+    id: 'p2557',
+    name: 'Hezron',
+    childrenIds: ['p2658'],
+    parentIds: ['p2456']
+}
+
+const p2658 = {
+    id: 'p2658',
+    name: 'Ram',
+    childrenIds: ['p2759'],
+    parentIds: ['p2557']
+}
+
+const p2759 = {
+    id: 'p2759',
+    name: 'Amminadab',
+    childrenIds: ['p2860'],
+    parentIds: ['p2658']
+}
+
+const p2860 = {
+    id: 'p2860',
+    name: 'Nahshon',
+    childrenIds: ['p2961'],
+    parentIds: ['p2759']
+}
+
+const p2961 = {
+    id: 'p2961',
+    name: 'Salmon',
+    spouseIds: ['p2962'],
+    childrenIds: ['p3062'],
+    parentIds: ['p2860']
+}
+
+const p2962 = {
+    id: 'p2962',
+    name: 'Rahab',
+    spouseIds: ['p2961'],
+    childrenIds: ['p3062'],
+    parentIds: []
+}
+
+const p3062 = {
+    id: 'p3062',
+    name: 'Boaz',
+    spouseIds: ['p3063'],
+    childrenIds: ['p3163'],
+    parentIds: ['p2961', 'p2962']
+}
+
+const p3063 = {
+    id: 'p3063',
+    name: 'Ruth',
+    spouseIds: ['p3062'],
+    childrenIds: ['p3163'],
+    parentIds: []
+}
+
+const p3163 = {
+    id: 'p3163',
+    name: 'Obed',
+    childrenIds: ['p3264'],
+    parentIds: ['p3062', 'p3063']
+}
+
+const p3264 = {
+    id: 'p3264',
+    name: 'Jesse',
+    childrenIds: ['p3365'],
+    parentIds: ['p3163']
+}
+
+const p3365 = {
+    id: 'p3365',
+    name: 'David',
+    spouseIds: ['p3366', 'p3367', 'p3368', 'p3369', 'p3370', 'p3371', 'p3372'],
+    childrenIds: ['p3466', 'p3467', 'p3468', 'p3469', 'p3470', 'p3471'],
+    parentIds: ['p3264']
+}
+
+const p3366 = {
+    id: 'p3366',
+    name: 'Michal',
+    spouseIds: ['p3365'],
+    childrenIds: [],
+    parentIds: []
+}
+
+const p3367 = {
+    id: 'p3367',
+    name: 'Ahinoam',
+    spouseIds: ['p3365'],
+    childrenIds: ['p3466'],
+    parentIds: []
+}
+
+const p3368 = {
+    id: 'p3368',
+    name: 'Abigail',
+    spouseIds: ['p3365'],
+    childrenIds: ['p3467'],
+    parentIds: []
+}
+
+const p3369 = {
+    id: 'p3369',
+    name: 'Maacah',
+    spouseIds: ['p3365'],
+    childrenIds: ['p3468'],
+    parentIds: []
+}
+
+const p3370 = {
+    id: 'p3370',
+    name: 'Haggith',
+    spouseIds: ['p3365'],
+    childrenIds: ['p3469'],
+    parentIds: []
+}
+
+const p3371 = {
+    id: 'p3371',
+    name: 'Abital',
+    spouseIds: ['p3365'],
+    childrenIds: [],
+    parentIds: []
+}
+
+const p3372 = {
+    id: 'p3372',
+    name: 'Bathsheba',
+    spouseIds: ['p3365'],
+    childrenIds: ['p3470', 'p3471'],
+    parentIds: []
+}
+
+const p3466 = {
+    id: 'p3466',
+    name: 'Amnon',
+    childrenIds: [],
+    parentIds: ['p3365', 'p3367']
+}
+
+const p3467 = {
+    id: 'p3467',
+    name: 'Chileab',
+    childrenIds: [],
+    parentIds: ['p3365', 'p3368']
+}
+
+const p3468 = {
+    id: 'p3468',
+    name: 'Absalom',
+    childrenIds: [],
+    parentIds: ['p3365', 'p3369']
+}
+
+const p3469 = {
+    id: 'p3469',
+    name: 'Adonijah',
+    childrenIds: [],
+    parentIds: ['p3365', 'p3370']
+}
+
+const p3470 = {
+    id: 'p3470',
+    name: 'Nathan',
+    childrenIds: [],
+    parentIds: ['p3365', 'p3372']
+}
+
+const p3471 = {
+    id: 'p3471',
+    name: 'Solomon',
+    childrenIds: [],
+    parentIds: ['p3365', 'p3372']
 }
 
 const p2449 = {
@@ -503,6 +699,32 @@ const personById = {
     p2346,
     p2347,
     p2348,
+    p2349,
+    p2456,
+    p2557,
+    p2658,
+    p2759,
+    p2860,
+    p2961,
+    p2962,
+    p3062,
+    p3063,
+    p3163,
+    p3264,
+    p3365,
+    p3366,
+    p3367,
+    p3368,
+    p3369,
+    p3370,
+    p3371,
+    p3372,
+    p3466,
+    p3467,
+    p3468,
+    p3469,
+    p3470,
+    p3471,
     p2449,
     p2550,
     p2551,

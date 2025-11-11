@@ -62,20 +62,35 @@ function renderLevel(level=1) {
 
 
 function getPersonHTML(person) {
-    // Determine border color based on mother (for Jacob's children)
+    // Determine border color based on mother
     let colorClass = ''
     if (person.parentIds) {
+        // Jacob's children
         if (person.parentIds.includes('p2235')) colorClass = 'mother-leah' // Leah - blue
         else if (person.parentIds.includes('p2236')) colorClass = 'mother-rachel' // Rachel - pink
         else if (person.parentIds.includes('p2237')) colorClass = 'mother-bilhah' // Bilhah - green
         else if (person.parentIds.includes('p2238')) colorClass = 'mother-zilpah' // Zilpah - purple
+        
+        // David's children
+        else if (person.parentIds.includes('p3367')) colorClass = 'mother-ahinoam' // Ahinoam - orange
+        else if (person.parentIds.includes('p3368')) colorClass = 'mother-abigail' // Abigail - teal
+        else if (person.parentIds.includes('p3369')) colorClass = 'mother-maacah' // Maacah - red
+        else if (person.parentIds.includes('p3370')) colorClass = 'mother-haggith' // Haggith - brown
+        else if (person.parentIds.includes('p3372')) colorClass = 'mother-bathsheba' // Bathsheba - gold
     }
     
-    // Also mark the mothers themselves
+    // Mark Jacob's wives
     if (person.id === 'p2235') colorClass = 'mother-leah'
     else if (person.id === 'p2236') colorClass = 'mother-rachel'
     else if (person.id === 'p2237') colorClass = 'mother-bilhah'
     else if (person.id === 'p2238') colorClass = 'mother-zilpah'
+    
+    // Mark David's wives
+    else if (person.id === 'p3367') colorClass = 'mother-ahinoam'
+    else if (person.id === 'p3368') colorClass = 'mother-abigail'
+    else if (person.id === 'p3369') colorClass = 'mother-maacah'
+    else if (person.id === 'p3370') colorClass = 'mother-haggith'
+    else if (person.id === 'p3372') colorClass = 'mother-bathsheba'
 
     const htmlPerson = `<article class="person-preview ${colorClass}" data-person-id="${person.id}">
         <h3>${person.name}</h3>
