@@ -12,12 +12,12 @@ function onInit() {
 }
 
 
-function renderLevel(level=0) {
+function renderLevel(level=1) {
     const persons = personService.getPersonsByLevel(level)
     if (!persons?.length) return
     
     const renderedIds = new Set()
-    var strHTML = '<div class="row">'
+    var strHTML = '<div class="row" data-level="' + level + '">'
     
     persons.forEach(person => {
         if (renderedIds.has(person.id)) return
@@ -30,7 +30,8 @@ function renderLevel(level=0) {
         
         if (spouses.length > 0) {
             // Render person with all their spouses together
-            strHTML += '<div class="couple">'
+            const allIds = [person.id, ...spouses.map(s => s.id)].join(',')
+            strHTML += '<div class="couple" data-person-ids="' + allIds + '">'
             strHTML += getPersonHTML(person)
             spouses.forEach(spouse => {
                 strHTML += getPersonHTML(spouse)
@@ -39,8 +40,10 @@ function renderLevel(level=0) {
             strHTML += '</div>'
             renderedIds.add(person.id)
         } else {
-            // Render single person
+            // Render single person with wrapper
+            strHTML += '<div class="single-person" data-person-id="' + person.id + '">'
             strHTML += getPersonHTML(person)
+            strHTML += '</div>'
             renderedIds.add(person.id)
         }
     })
@@ -48,19 +51,154 @@ function renderLevel(level=0) {
     strHTML += '</div>'
     const el = document.querySelector('.family-tree')
     el.innerHTML += strHTML
+    
+    // Draw connections after rendering
+    if (level > 0) {
+        setTimeout(() => drawConnections(level - 1, level), 0)
+    }
+    
     renderLevel(level + 1)
 }
 
 
 function getPersonHTML(person) {
+    // Determine border color based on mother (for Jacob's children)
+    let colorClass = ''
+    if (person.parentIds) {
+        if (person.parentIds.includes('p2235')) colorClass = 'mother-leah' // Leah - blue
+        else if (person.parentIds.includes('p2236')) colorClass = 'mother-rachel' // Rachel - pink
+        else if (person.parentIds.includes('p2237')) colorClass = 'mother-bilhah' // Bilhah - green
+        else if (person.parentIds.includes('p2238')) colorClass = 'mother-zilpah' // Zilpah - purple
+    }
+    
+    // Also mark the mothers themselves
+    if (person.id === 'p2235') colorClass = 'mother-leah'
+    else if (person.id === 'p2236') colorClass = 'mother-rachel'
+    else if (person.id === 'p2237') colorClass = 'mother-bilhah'
+    else if (person.id === 'p2238') colorClass = 'mother-zilpah'
 
-    const htmlPerson = `<article class="person-preview">
+    const htmlPerson = `<article class="person-preview ${colorClass}" data-person-id="${person.id}">
         <h3>${person.name}</h3>
         <p>ID: ${person.id}</p>
     </article>
     `
     return htmlPerson
+}
+
+
+function drawConnections(parentLevel, childLevel) {
+    const parentRow = document.querySelector(`.row[data-level="${parentLevel}"]`)
+    const childRow = document.querySelector(`.row[data-level="${childLevel}"]`)
     
+    if (!parentRow || !childRow) return
+    
+    // Check if SVG already exists
+    let svg = document.querySelector(`svg[data-from-level="${parentLevel}"]`)
+    if (svg) return
+    
+    // Create SVG
+    svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+    svg.classList.add('connection-layer')
+    svg.setAttribute('data-from-level', parentLevel)
+    
+    const familyTree = document.querySelector('.family-tree')
+    const treeRect = familyTree.getBoundingClientRect()
+    
+    // Get all parent containers
+    const parentContainers = parentRow.querySelectorAll('.couple, .single-person')
+    
+    parentContainers.forEach(parentContainer => {
+        // Get person IDs from this container
+        const personIds = (parentContainer.dataset.personIds || parentContainer.dataset.personId || '').split(',').filter(id => id)
+        if (!personIds.length) return
+        
+        // Find all child CONTAINERS (not individual person IDs) whose persons have this parent
+        const childContainers = []
+        const childContainersInRow = childRow.querySelectorAll('.couple, .single-person')
+        
+        childContainersInRow.forEach(childContainer => {
+            const childPersonIds = (childContainer.dataset.personIds || childContainer.dataset.personId || '').split(',').filter(id => id)
+            
+            // Check if any person in this child container has any person from parent container as parent
+            const hasParentMatch = childPersonIds.some(childPersonId => {
+                const childPerson = personService.getPersonById(childPersonId)
+                return childPerson && childPerson.parentIds && 
+                       childPerson.parentIds.some(parentId => personIds.includes(parentId))
+            })
+            
+            if (hasParentMatch) {
+                childContainers.push(childContainer)
+            }
+        })
+        
+        if (!childContainers.length) return
+        
+        const parentRect = parentContainer.getBoundingClientRect()
+        const parentX = parentRect.left + parentRect.width / 2 - treeRect.left
+        const parentY = parentRect.bottom - treeRect.top
+        
+        // Get child container positions
+        const childPositions = childContainers.map(childContainer => {
+            const childRect = childContainer.getBoundingClientRect()
+            return {
+                x: childRect.left + childRect.width / 2 - treeRect.left,
+                y: childRect.top - treeRect.top,
+                container: childContainer
+            }
+        })
+        
+        if (!childPositions.length) return
+        
+        // Calculate positions for the tree structure
+        const childY = Math.min(...childPositions.map(p => p.y))
+        const midY = parentY + (childY - parentY) / 2
+        
+        if (childPositions.length === 1) {
+            // Single child - draw straight line
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line')
+            line.setAttribute('x1', parentX)
+            line.setAttribute('y1', parentY)
+            line.setAttribute('x2', childPositions[0].x)
+            line.setAttribute('y2', childPositions[0].y)
+            line.classList.add('connection-line')
+            svg.appendChild(line)
+        } else {
+            // Multiple children - draw tree structure
+            const minChildX = Math.min(...childPositions.map(p => p.x))
+            const maxChildX = Math.max(...childPositions.map(p => p.x))
+            
+            // Draw vertical line from parent down to horizontal line
+            const verticalLine = document.createElementNS('http://www.w3.org/2000/svg', 'line')
+            verticalLine.setAttribute('x1', parentX)
+            verticalLine.setAttribute('y1', parentY)
+            verticalLine.setAttribute('x2', parentX)
+            verticalLine.setAttribute('y2', midY)
+            verticalLine.classList.add('connection-line')
+            svg.appendChild(verticalLine)
+            
+            // Draw horizontal line connecting all children
+            const horizontalLine = document.createElementNS('http://www.w3.org/2000/svg', 'line')
+            horizontalLine.setAttribute('x1', minChildX)
+            horizontalLine.setAttribute('y1', midY)
+            horizontalLine.setAttribute('x2', maxChildX)
+            horizontalLine.setAttribute('y2', midY)
+            horizontalLine.classList.add('connection-line')
+            svg.appendChild(horizontalLine)
+            
+            // Draw vertical lines down to each child
+            childPositions.forEach(pos => {
+                const childLine = document.createElementNS('http://www.w3.org/2000/svg', 'line')
+                childLine.setAttribute('x1', pos.x)
+                childLine.setAttribute('y1', midY)
+                childLine.setAttribute('x2', pos.x)
+                childLine.setAttribute('y2', pos.y)
+                childLine.classList.add('connection-line')
+                svg.appendChild(childLine)
+            })
+        }
+    })
+    
+    childRow.parentNode.insertBefore(svg, childRow)
 }
 
 
