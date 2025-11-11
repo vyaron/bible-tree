@@ -10,6 +10,24 @@
     <h1>Bible Tree</h1>
     <section class="family-tree"></section>
 
+    <!-- Person Details Modal -->
+    <dialog id="person-modal" class="person-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="document.getElementById('person-modal').close()">×</button>
+            <div class="modal-body">
+                <div class="modal-image-container">
+                    <img id="modal-image" src="" alt="" class="modal-image">
+                </div>
+                <div class="modal-info">
+                    <h2 id="modal-name"></h2>
+                    <p id="modal-description" class="modal-description"></p>
+                    <p id="modal-summary" class="modal-summary"></p>
+                    <a id="modal-link" href="" target="_blank" class="modal-link">Read more on Wikipedia →</a>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
     <script type="module" src="js/main.js"></script>
 </body>
 </html>

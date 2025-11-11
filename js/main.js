@@ -1,4 +1,5 @@
 import { personService } from './services/person.service.js'
+import { wikiService } from './services/wiki.service.js'
 
 window.app = {
     onInit
@@ -9,6 +10,7 @@ function onInit() {
     const rootPerson = personService.getRoot()
     console.log(rootPerson)
     renderLevel()
+    setupModalHandlers()
 }
 
 
@@ -92,9 +94,9 @@ function getPersonHTML(person) {
     else if (person.id === 'p3370') colorClass = 'mother-haggith'
     else if (person.id === 'p3372') colorClass = 'mother-bathsheba'
 
-    const htmlPerson = `<article class="person-preview ${colorClass}" data-person-id="${person.id}">
+    const htmlPerson = `<article class="person-preview ${colorClass}" data-person-id="${person.id}" title="ID: ${person.id}">
         <h3>${person.name}</h3>
-        <p>ID: ${person.id}</p>
+        ${person.nameHe ? `<p class="hebrew-name">${person.nameHe}</p>` : ''}
     </article>
     `
     return htmlPerson
@@ -217,4 +219,63 @@ function drawConnections(parentLevel, childLevel) {
     childRow.parentNode.insertBefore(svg, childRow)
 }
 
+
+function setupModalHandlers() {
+    // Use event delegation for dynamically added person cards
+    document.querySelector('.family-tree').addEventListener('click', async (e) => {
+        const personCard = e.target.closest('.person-preview')
+        if (!personCard) return
+        
+        const personId = personCard.dataset.personId
+        const person = personService.getPersonById(personId)
+        
+        if (!person) return
+        
+        await showPersonModal(person)
+    })
+}
+
+
+async function showPersonModal(person) {
+    const modal = document.getElementById('person-modal')
+    const modalName = document.getElementById('modal-name')
+    const modalDescription = document.getElementById('modal-description')
+    const modalSummary = document.getElementById('modal-summary')
+    const modalImage = document.getElementById('modal-image')
+    const modalImageContainer = document.querySelector('.modal-image-container')
+    const modalLink = document.getElementById('modal-link')
+    
+    // Set loading state
+    modalName.textContent = person.name
+    modalDescription.textContent = 'Loading...'
+    modalSummary.textContent = ''
+    modalImageContainer.style.display = 'none'
+    modalLink.style.display = 'none'
+    
+    // Show modal
+    modal.showModal()
+    
+    // Fetch Wikipedia data
+    const wikiData = await wikiService.getPersonData(person.name, person)
+    
+    // Update modal with data
+    modalName.textContent = wikiData.name
+    modalDescription.textContent = wikiData.description
+    modalSummary.textContent = wikiData.summary
+    
+    if (wikiData.image) {
+        modalImage.src = wikiData.image
+        modalImage.alt = wikiData.name
+        modalImageContainer.style.display = 'block'
+    } else {
+        modalImageContainer.style.display = 'none'
+    }
+    
+    if (wikiData.url) {
+        modalLink.href = wikiData.url
+        modalLink.style.display = 'inline-block'
+    } else {
+        modalLink.style.display = 'none'
+    }
+}
 
