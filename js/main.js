@@ -135,7 +135,7 @@ function drawConnections(parentLevel, childLevel) {
         
         const parentRect = parentContainer.getBoundingClientRect()
         const parentX = parentRect.left + parentRect.width / 2 - treeRect.left
-        const parentY = parentRect.bottom - treeRect.top
+        const parentY = parentRect.bottom - treeRect.top 
         
         // Get child container positions
         const childPositions = childContainers.map(childContainer => {
@@ -157,21 +157,22 @@ function drawConnections(parentLevel, childLevel) {
             // Single child - draw straight line
             const line = document.createElementNS('http://www.w3.org/2000/svg', 'line')
             line.setAttribute('x1', parentX)
-            line.setAttribute('y1', parentY)
+            line.setAttribute('y1', parentY-10)
             line.setAttribute('x2', childPositions[0].x)
-            line.setAttribute('y2', childPositions[0].y)
+            line.setAttribute('y2', childPositions[0].y+10)
             line.classList.add('connection-line')
             svg.appendChild(line)
         } else {
             // Multiple children - draw tree structure
             const minChildX = Math.min(...childPositions.map(p => p.x))
             const maxChildX = Math.max(...childPositions.map(p => p.x))
+            const horizontalMidX = (minChildX + maxChildX) / 2
             
             // Draw vertical line from parent down to horizontal line
             const verticalLine = document.createElementNS('http://www.w3.org/2000/svg', 'line')
             verticalLine.setAttribute('x1', parentX)
             verticalLine.setAttribute('y1', parentY)
-            verticalLine.setAttribute('x2', parentX)
+            verticalLine.setAttribute('x2', horizontalMidX)
             verticalLine.setAttribute('y2', midY)
             verticalLine.classList.add('connection-line')
             svg.appendChild(verticalLine)
@@ -191,7 +192,7 @@ function drawConnections(parentLevel, childLevel) {
                 childLine.setAttribute('x1', pos.x)
                 childLine.setAttribute('y1', midY)
                 childLine.setAttribute('x2', pos.x)
-                childLine.setAttribute('y2', pos.y)
+                childLine.setAttribute('y2', pos.y+10)
                 childLine.classList.add('connection-line')
                 svg.appendChild(childLine)
             })
