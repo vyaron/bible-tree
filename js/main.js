@@ -134,7 +134,15 @@ function getPersonHTML(person) {
     else if (person.id === 'p3370') colorClass = 'mother-haggith'
     else if (person.id === 'p3372') colorClass = 'mother-bathsheba'
 
-    const htmlPerson = `<article class="person-preview ${colorClass}" data-person-id="${person.id}" title="ID: ${person.id}">
+    // Format year information for tooltip
+    let titleText = `ID: ${person.id}`
+    if (person.yearBorn !== undefined || person.yearDied !== undefined) {
+        const born = person.yearBorn ? `${Math.abs(person.yearBorn)} BCE` : '?'
+        const died = person.yearDied ? `${Math.abs(person.yearDied)} BCE` : '?'
+        titleText += `\n${born} - ${died}`
+    }
+
+    const htmlPerson = `<article class="person-preview ${colorClass}" data-person-id="${person.id}" title="${titleText}">
         <h3>${person.name}</h3>
         ${person.nameHe ? `<p class="hebrew-name">${person.nameHe}</p>` : ''}
     </article>
