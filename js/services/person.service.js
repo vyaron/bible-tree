@@ -138,18 +138,9 @@ const p1013 = {
     id: 'p1013',
     name: 'Noah',
     nameHe: 'נח',
-    spouseIds: ['p1014'],
+    spouseIds: [],
     childrenIds: ['p1115', 'p1116', 'p1117'],
     parentIds: ['p912']
-}
-
-const p1014 = {
-    id: 'p1014',
-    name: "Noah's Wife",
-    nameHe: 'אשת נח',
-    spouseIds: ['p1013'],
-    childrenIds: ['p1115', 'p1116', 'p1117'],
-    parentIds: []
 }
 
 const p1115 = {
@@ -157,7 +148,7 @@ const p1115 = {
     name: 'Shem',
     nameHe: 'שם',
     childrenIds: ['p1218'],
-    parentIds: ['p1013', 'p1014']
+    parentIds: ['p1013']
 }
 
 const p1116 = {
@@ -165,7 +156,7 @@ const p1116 = {
     name: 'Ham',
     nameHe: 'חם',
     childrenIds: [],
-    parentIds: ['p1013', 'p1014']
+    parentIds: ['p1013']
 }
 
 const p1117 = {
@@ -173,7 +164,7 @@ const p1117 = {
     name: 'Japheth',
     nameHe: 'יפת',
     childrenIds: [],
-    parentIds: ['p1013', 'p1014']
+    parentIds: ['p1013']
 }
 
 const p1218 = {
@@ -390,7 +381,7 @@ const p2341 = {
     id: 'p2341',
     name: 'Dan',
     nameHe: 'דן',
-    childrenIds: [],
+    childrenIds: ['p2963'],
     parentIds: ['p2234', 'p2237']
 }
 
@@ -731,6 +722,23 @@ const p2655 = {
     parentIds: []
 }
 
+const p2963 = {
+    id: 'p2963',
+    name: 'Manoah',
+    nameHe: 'מנוח',
+    spouseIds: [],
+    childrenIds: ['p3064'],
+    parentIds: ['p2341']
+}
+
+const p3064 = {
+    id: 'p3064',
+    name: 'Samson',
+    nameHe: 'שמשון',
+    childrenIds: [],
+    parentIds: ['p2963']
+}
+
 const personById = {
     p10,
     p101,
@@ -746,7 +754,6 @@ const personById = {
     p811,
     p912,
     p1013,
-    p1014,
     p1115,
     p1116,
     p1117,
@@ -793,6 +800,7 @@ const personById = {
     p2962,
     p3062,
     p3063,
+    p3064,
     p3163,
     p3264,
     p3365,
@@ -815,7 +823,8 @@ const personById = {
     p2652,
     p2653,
     p2654,
-    p2655
+    p2655,
+    p2963
 }
 
 

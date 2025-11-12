@@ -56,10 +56,50 @@ function renderLevel(level=1) {
     
     // Draw connections after rendering
     if (level > 0) {
-        setTimeout(() => drawConnections(level - 1, level), 0)
+        setTimeout(() => drawConnectionsForLevel(level), 0)
     }
     
     renderLevel(level + 1)
+}
+
+
+function drawConnectionsForLevel(childLevel) {
+    const childRow = document.querySelector(`.row[data-level="${childLevel}"]`)
+    if (!childRow) return
+    
+    // Get all persons in this child level
+    const childContainersInRow = childRow.querySelectorAll('.couple, .single-person')
+    
+    // Find all unique parent levels that have children in this level
+    const parentLevels = new Set()
+    
+    console.log(`Drawing connections for level ${childLevel}`)
+    
+    childContainersInRow.forEach(childContainer => {
+        const childPersonIds = (childContainer.dataset.personIds || childContainer.dataset.personId || '').split(',').filter(id => id)
+        
+        childPersonIds.forEach(childPersonId => {
+            const childPerson = personService.getPersonById(childPersonId)
+            if (!childPerson || !childPerson.parentIds) return
+            
+            childPerson.parentIds.forEach(parentId => {
+                const parentPerson = personService.getPersonById(parentId)
+                if (!parentPerson) return
+                
+                const parentLevel = parseInt(parentPerson.id.substring(1, parentPerson.id.length - 2))
+                console.log(`  Found parent: ${parentPerson.name} (${parentPerson.id}) at level ${parentLevel} for child ${childPerson.name}`)
+                parentLevels.add(parentLevel)
+            })
+        })
+    })
+    
+    console.log(`  Parent levels found: ${Array.from(parentLevels).join(', ')}`)
+    
+    // Draw connections from each parent level to this child level
+    parentLevels.forEach(parentLevel => {
+        console.log(`  Calling drawConnections(${parentLevel}, ${childLevel})`)
+        drawConnections(parentLevel, childLevel)
+    })
 }
 
 
@@ -107,16 +147,22 @@ function drawConnections(parentLevel, childLevel) {
     const parentRow = document.querySelector(`.row[data-level="${parentLevel}"]`)
     const childRow = document.querySelector(`.row[data-level="${childLevel}"]`)
     
+    console.log(`drawConnections(${parentLevel}, ${childLevel}): parentRow=${!!parentRow}, childRow=${!!childRow}`)
+    
     if (!parentRow || !childRow) return
     
-    // Check if SVG already exists
-    let svg = document.querySelector(`svg[data-from-level="${parentLevel}"]`)
-    if (svg) return
+    // Check if SVG already exists for this specific parent-child pair
+    let svg = document.querySelector(`svg[data-from-level="${parentLevel}"][data-to-level="${childLevel}"]`)
+    if (svg) {
+        console.log(`  SVG already exists for ${parentLevel}→${childLevel}, skipping`)
+        return
+    }
     
     // Create SVG
     svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
     svg.classList.add('connection-layer')
     svg.setAttribute('data-from-level', parentLevel)
+    svg.setAttribute('data-to-level', childLevel)
     
     const familyTree = document.querySelector('.family-tree')
     const treeRect = familyTree.getBoundingClientRect()
@@ -154,6 +200,34 @@ function drawConnections(parentLevel, childLevel) {
         const parentX = parentRect.left + parentRect.width / 2 - treeRect.left
         const parentY = parentRect.bottom - treeRect.top 
         
+        // Check if this is a direct descendant by examining actual parent-child person objects
+        let isDirectDescendant = true
+        personIds.forEach(parentPersonId => {
+            const parentPerson = personService.getPersonById(parentPersonId)
+            if (!parentPerson) return
+            
+            // Get the parent's level from their ID
+            const parentPersonLevel = parseInt(parentPerson.id.substring(1, parentPerson.id.length - 2))
+            
+            // Check each child to see if they're direct descendants
+            childContainers.forEach(childContainer => {
+                const childPersonIds = (childContainer.dataset.personIds || childContainer.dataset.personId || '').split(',').filter(id => id)
+                childPersonIds.forEach(childPersonId => {
+                    const childPerson = personService.getPersonById(childPersonId)
+                    if (!childPerson) return
+                    
+                    // Get the child's level from their ID
+                    const childPersonLevel = parseInt(childPerson.id.substring(1, childPerson.id.length - 2))
+                    
+                    // If the child's level is more than 1 greater than parent's level, it's not direct
+                    if (childPersonLevel - parentPersonLevel > 1) {
+                        isDirectDescendant = false
+                        console.log(`Found non-direct: ${parentPerson.name} (${parentPerson.id}, level ${parentPersonLevel}) -> ${childPerson.name} (${childPerson.id}, level ${childPersonLevel})`)
+                    }
+                })
+            })
+        })
+        
         // Get child container positions
         const childPositions = childContainers.map(childContainer => {
             const childRect = childContainer.getBoundingClientRect()
@@ -178,6 +252,9 @@ function drawConnections(parentLevel, childLevel) {
             line.setAttribute('x2', childPositions[0].x)
             line.setAttribute('y2', childPositions[0].y+10)
             line.classList.add('connection-line')
+            if (!isDirectDescendant) {
+                line.classList.add('dotted')
+            }
             svg.appendChild(line)
         } else {
             // Multiple children - draw tree structure
@@ -192,6 +269,9 @@ function drawConnections(parentLevel, childLevel) {
             verticalLine.setAttribute('x2', horizontalMidX)
             verticalLine.setAttribute('y2', midY)
             verticalLine.classList.add('connection-line')
+            if (!isDirectDescendant) {
+                verticalLine.classList.add('dotted')
+            }
             svg.appendChild(verticalLine)
             
             // Draw horizontal line connecting all children
@@ -201,6 +281,9 @@ function drawConnections(parentLevel, childLevel) {
             horizontalLine.setAttribute('x2', maxChildX)
             horizontalLine.setAttribute('y2', midY)
             horizontalLine.classList.add('connection-line')
+            if (!isDirectDescendant) {
+                horizontalLine.classList.add('dotted')
+            }
             svg.appendChild(horizontalLine)
             
             // Draw vertical lines down to each child
@@ -211,6 +294,9 @@ function drawConnections(parentLevel, childLevel) {
                 childLine.setAttribute('x2', pos.x)
                 childLine.setAttribute('y2', pos.y+10)
                 childLine.classList.add('connection-line')
+                if (!isDirectDescendant) {
+                    childLine.classList.add('dotted')
+                }
                 svg.appendChild(childLine)
             })
         }
