@@ -1012,8 +1012,130 @@ const p5390 = {
     nameHe: 'זרובבל',
     yearBorn: null,
     yearDied: -510,
-    childrenIds: [],
+    childrenIds: ['p5491'],
     parentIds: ['p5289']
+}
+
+const p5491 = {
+    id: 'p5491',
+    name: 'Abiud',
+    nameHe: 'אביוד',
+    yearBorn: null,
+    yearDied: null,
+    childrenIds: ['p5592'],
+    parentIds: ['p5390']
+}
+
+const p5592 = {
+    id: 'p5592',
+    name: 'Eliakim',
+    nameHe: 'אליקים',
+    yearBorn: null,
+    yearDied: null,
+    childrenIds: ['p5693'],
+    parentIds: ['p5491']
+}
+
+const p5693 = {
+    id: 'p5693',
+    name: 'Azor',
+    nameHe: 'עזור',
+    yearBorn: null,
+    yearDied: null,
+    childrenIds: ['p5794'],
+    parentIds: ['p5592']
+}
+
+const p5794 = {
+    id: 'p5794',
+    name: 'Zadok',
+    nameHe: 'צדוק',
+    yearBorn: null,
+    yearDied: null,
+    childrenIds: ['p5895'],
+    parentIds: ['p5693']
+}
+
+const p5895 = {
+    id: 'p5895',
+    name: 'Achim',
+    nameHe: 'אכים',
+    yearBorn: null,
+    yearDied: null,
+    childrenIds: ['p5996'],
+    parentIds: ['p5794']
+}
+
+const p5996 = {
+    id: 'p5996',
+    name: 'Eliud',
+    nameHe: 'אליעוד',
+    yearBorn: null,
+    yearDied: null,
+    childrenIds: ['p6097'],
+    parentIds: ['p5895']
+}
+
+const p6097 = {
+    id: 'p6097',
+    name: 'Eleazar',
+    nameHe: 'אלעזר',
+    yearBorn: null,
+    yearDied: null,
+    childrenIds: ['p6198'],
+    parentIds: ['p5996']
+}
+
+const p6198 = {
+    id: 'p6198',
+    name: 'Matthan',
+    nameHe: 'מתן',
+    yearBorn: null,
+    yearDied: null,
+    childrenIds: ['p6299'],
+    parentIds: ['p6097']
+}
+
+const p6299 = {
+    id: 'p6299',
+    name: 'Jacob',
+    nameHe: 'יעקב',
+    yearBorn: null,
+    yearDied: null,
+    childrenIds: ['p6300'],
+    parentIds: ['p6198']
+}
+
+const p6300 = {
+    id: 'p6300',
+    name: 'Joseph',
+    nameHe: 'יוסף',
+    yearBorn: null,
+    yearDied: null,
+    spouseIds: ['p6301'],
+    childrenIds: ['p6402'],
+    parentIds: ['p6299']
+}
+
+const p6301 = {
+    id: 'p6301',
+    name: 'Mary',
+    nameHe: 'מרים',
+    yearBorn: null,
+    yearDied: null,
+    spouseIds: ['p6300'],
+    childrenIds: ['p6402'],
+    parentIds: []
+}
+
+const p6402 = {
+    id: 'p6402',
+    name: 'Jesus',
+    nameHe: 'ישוע',
+    yearBorn: -4,
+    yearDied: 30,
+    childrenIds: [],
+    parentIds: ['p6300', 'p6301']
 }
 
 // Judges and other key figures
@@ -1155,7 +1277,19 @@ const personById = {
     p5087,
     p5188,
     p5289,
-    p5390
+    p5390,
+    p5491,
+    p5592,
+    p5693,
+    p5794,
+    p5895,
+    p5996,
+    p6097,
+    p6198,
+    p6299,
+    p6300,
+    p6301,
+    p6402
 }
 
 

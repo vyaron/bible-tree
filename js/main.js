@@ -104,6 +104,13 @@ function drawConnectionsForLevel(childLevel) {
 
 
 function getPersonHTML(person) {
+    const formatYear = (year) => {
+        if (year === null || year === undefined) return '?'
+        if (year < 0) return `${Math.abs(year)} BCE`
+        if (year > 0) return `${year} CE`
+        return '0'
+    }
+
     // Determine border color based on mother
     let colorClass = ''
     if (person.parentIds) {
@@ -137,8 +144,8 @@ function getPersonHTML(person) {
     // Format year information for tooltip
     let titleText = `ID: ${person.id}`
     if (person.yearBorn !== undefined || person.yearDied !== undefined) {
-        const born = person.yearBorn ? `${Math.abs(person.yearBorn)} BCE` : '?'
-        const died = person.yearDied ? `${Math.abs(person.yearDied)} BCE` : '?'
+        const born = formatYear(person.yearBorn)
+        const died = formatYear(person.yearDied)
         titleText += `\n${born} - ${died}`
     }
 
